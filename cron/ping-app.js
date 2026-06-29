@@ -2,6 +2,8 @@ import "dotenv/config";
 
 const baseUrl = process.env.APP_URL || process.env.RENDER_EXTERNAL_URL;
 const targetUrl = baseUrl ? new URL("/health", baseUrl).toString() : null;
+const intervalMs = 30_000;
+const runForMs = 4.5 * 60_000;
 
 if (!targetUrl) {
   console.error("Missing APP_URL or RENDER_EXTERNAL_URL environment variable");
@@ -44,4 +46,11 @@ async function ping() {
   }
 }
 
+const endAt = Date.now() + runForMs;
+
 await ping();
+
+while (Date.now() + intervalMs <= endAt) {
+  await new Promise((resolve) => setTimeout(resolve, intervalMs));
+  await ping();
+}
