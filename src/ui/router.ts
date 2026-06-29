@@ -5,6 +5,7 @@ import { itemRouter } from './routes/item.routes.js';
 import { userRouter } from './routes/user.routes.js';
 import { authRouter } from './routes/auth.routes.js';
 import { writeRouter } from './routes/write.routes.js';
+import { searchRouter } from './routes/search.routes.js';
 
 export const uiRouter = Router();
 
@@ -12,6 +13,7 @@ uiRouter.use(loadUser);
 uiRouter.use(flashMiddleware);
 uiRouter.use(authRouter);
 uiRouter.use(writeRouter);
+uiRouter.use(searchRouter);
 uiRouter.use(itemRouter);
 uiRouter.use(userRouter);
 uiRouter.use(feedRouter);

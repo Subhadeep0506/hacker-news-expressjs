@@ -127,6 +127,14 @@ export interface AlgoliaCommentHit {
     points: number;
 }
 
+export interface SearchResponse {
+    items: AlgoliaStoryHit[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+}
+
 export interface UserSubmissionsResponse {
     items: AlgoliaStoryHit[];
     total: number;

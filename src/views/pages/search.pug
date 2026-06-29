@@ -1,0 +1,28 @@
+extends ../layout
+
+include ../mixins/story-row
+include ../mixins/pagination
+
+block content
+  .feed
+    h1.feed-title Search
+
+    form.search-form(method="GET" action="/search")
+      .search-bar
+        input.form-input.search-input(type="text" name="q" placeholder="Search Hacker News..." value=query autocomplete="off" autofocus)
+        button.btn.btn-primary(type="submit") Search
+      .search-sort
+        a.sort-btn(href=`/search?q=${encodeURIComponent(query)}&sort=relevance` class=(sort === 'relevance' ? 'sort-active' : '')) Relevance
+        a.sort-btn(href=`/search?q=${encodeURIComponent(query)}&sort=date` class=(sort === 'date' ? 'sort-active' : '')) Newest
+      input(type="hidden" name="sort" value=sort)
+
+    if query
+      if items && items.length
+        .search-meta #{total} results
+        .story-list
+          each item, i in items
+            +storyRow(item, page * limit + i + 1)
+        +pagination(`/search?q=${encodeURIComponent(query)}&sort=${sort}`, page, totalPages)
+      else
+        .empty-state
+          p No results found for "#{query}"

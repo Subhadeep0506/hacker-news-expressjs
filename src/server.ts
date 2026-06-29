@@ -22,6 +22,7 @@ export function createApp() {
     app.set('view engine', 'pug');
     app.set('views', join(__appDir, 'views'));
     app.use(express.static(join(__appDir, '..', 'public')));
+    app.use(express.static(join(__appDir, 'public')));
 
     app.use(helmet({
         contentSecurityPolicy: {

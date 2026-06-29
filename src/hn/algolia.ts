@@ -10,22 +10,22 @@ export async function fetchItemWithComments(id: number) {
     });
 }
 
-export async function search(query: string, page = 0, hitsPerPage = 20) {
-    const key = `search:${query}:${page}:${hitsPerPage}`;
+export async function search(query: string, page = 0, hitsPerPage = 20, tags?: string) {
+    const key = `search:${query}:${page}:${hitsPerPage}:${tags ?? ''}`;
     return cachedSingleFlight(key, 120, async () => {
-        const { data } = await anonClient.get(`${BASE}/search`, {
-            params: { query, page, hitsPerPage },
-        });
+        const params: Record<string, string | number> = { query, page, hitsPerPage };
+        if (tags) params.tags = tags;
+        const { data } = await anonClient.get(`${BASE}/search`, { params });
         return data;
     });
 }
 
-export async function searchByDate(query: string, page = 0, hitsPerPage = 20) {
-    const key = `search_date:${query}:${page}:${hitsPerPage}`;
+export async function searchByDate(query: string, page = 0, hitsPerPage = 20, tags?: string) {
+    const key = `search_date:${query}:${page}:${hitsPerPage}:${tags ?? ''}`;
     return cachedSingleFlight(key, 120, async () => {
-        const { data } = await anonClient.get(`${BASE}/search_by_date`, {
-            params: { query, page, hitsPerPage },
-        });
+        const params: Record<string, string | number> = { query, page, hitsPerPage };
+        if (tags) params.tags = tags;
+        const { data } = await anonClient.get(`${BASE}/search_by_date`, { params });
         return data;
     });
 }
