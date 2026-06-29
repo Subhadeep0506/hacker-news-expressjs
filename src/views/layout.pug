@@ -1,0 +1,46 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title= pageTitle ? `${pageTitle} — HN` : 'HN Companion'
+    script.
+      (function(){var t=localStorage.getItem('hn-theme');if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)})()
+    link(rel="stylesheet" href="/css/style.css")
+    link(rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>Y</text></svg>")
+  body
+    nav.navbar
+      .navbar-inner
+        a.logo(href="/")
+          span.logo-icon Y
+          span.logo-text HN Companion
+        .nav-links
+          a(href="/top" class=(feedType === 'top' ? 'active' : '')) top
+          a(href="/new" class=(feedType === 'new' ? 'active' : '')) new
+          a(href="/best" class=(feedType === 'best' ? 'active' : '')) best
+          a(href="/ask" class=(feedType === 'ask' ? 'active' : '')) ask
+          a(href="/show" class=(feedType === 'show' ? 'active' : '')) show
+          a(href="/jobs" class=(feedType === 'jobs' ? 'active' : '')) jobs
+        .nav-auth
+          button.theme-toggle#theme-toggle(type="button" title="Toggle dark mode" aria-label="Toggle dark mode")
+            span.theme-icon
+          if currentUser
+            a.nav-user(href=`/profile/${currentUser.username}`)= currentUser.username
+            a.nav-submit(href="/submit") submit
+            form.inline-form(method="POST" action="/logout")
+              button.nav-btn(type="submit") logout
+          else
+            a.nav-login(href="/login") login
+    main.container
+      if flash
+        .flash(class=`flash-${flash.type}`)
+          span= flash.message
+      block content
+    footer.footer
+      .footer-inner
+        p
+          | Built with the
+          a(href="/docs")  HN Companion API
+          |  &middot; Data from
+          a(href="https://news.ycombinator.com" target="_blank" rel="noopener")  Hacker News
+    script(src="/js/main.js")

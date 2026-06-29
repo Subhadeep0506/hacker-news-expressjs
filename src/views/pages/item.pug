@@ -1,0 +1,54 @@
+extends ../layout
+
+include ../mixins/comment-tree
+
+block content
+  .item-page
+    .item-header(id="story-header")
+      h1.item-title
+        if item.url
+          a(href=item.url target="_blank" rel="noopener")= item.title
+          |
+          span.item-domain (#{extractDomain(item.url)})
+        else
+          = item.title
+      .item-meta
+        span #{item.score || 0} points
+        |  by
+        a.meta-link(href=`/profile/${item.by}`)= item.by
+        |
+        span= timeAgo(item.time)
+        if currentUser
+          |  |
+          form.vote-form.inline-form(method="POST" action="/vote")
+            input(type="hidden" name="itemId" value=item.id)
+            input(type="hidden" name="direction" value="up")
+            button.vote-btn(type="submit" title="upvote") &#9650; upvote
+
+    if item.text
+      .item-text!= item.text
+
+    .comments-section
+      .comments-header
+        h2.comments-heading #{pluralize(item.descendants || 0, 'comment')}
+        if children && children.length
+          .comments-controls
+            button.btn-text#collapse-all(type="button") collapse all
+            span.comment-sep |
+            button.btn-text#expand-all(type="button") expand all
+
+      if currentUser
+        form.comment-form(method="POST" action="/comment")
+          input(type="hidden" name="parentId" value=item.id)
+          input(type="hidden" name="storyId" value=item.id)
+          textarea.comment-textarea(name="text" rows="4" placeholder="Add a comment..." required)
+          button.btn.btn-primary(type="submit") Add Comment
+
+      .comment-tree
+        if children && children.length
+          each child in children
+            if !child.deleted || (child.children && child.children.length)
+              +commentNode(child, 0, item.id)
+        else
+          .empty-state
+            p No comments yet.

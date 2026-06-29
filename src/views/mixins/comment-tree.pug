@@ -1,0 +1,45 @@
+mixin commentNode(comment, depth, storyId)
+  - const indent = Math.min(depth, 8)
+  .comment(id=`comment-${comment.id}` class=`comment-depth-${indent}` data-depth=depth)
+    .comment-head
+      span.collapse-toggle(title="collapse") [-]
+      if comment.author
+        a.comment-author(href=`/profile/${comment.author}`)= comment.author
+        if comment.points != null
+          span.comment-points= `${comment.points} pt${comment.points !== 1 ? 's' : ''}`
+        span.comment-sep &middot;
+        span.comment-time= timeAgo(comment.created_at_i || comment.time || 0)
+        if currentUser
+          span.comment-sep &middot;
+          form.vote-form.inline-form(method="POST" action="/vote")
+            input(type="hidden" name="itemId" value=comment.id)
+            input(type="hidden" name="direction" value="up")
+            button.vote-btn.vote-btn-sm(type="submit" title="upvote") &#9650;
+        span.comment-sep |
+        if comment.parent_id
+          a.comment-nav(href=`#comment-${comment.parent_id}` title="go to parent") parent
+        else
+          a.comment-nav(href="#story-header" title="go to story") parent
+        if depth === 0
+          a.comment-nav.next-root(href="#" title="next top-level comment") next
+        a.comment-nav(href=`#comment-${comment.id}` title="permalink") link
+      else
+        span.comment-deleted [deleted]
+    .comment-collapsible
+      if comment.text
+        .comment-body!= comment.text
+      if currentUser && comment.author
+        .comment-actions
+          a.reply-toggle(href="#" data-comment-id=comment.id) reply
+          form.reply-form.hidden(method="POST" action="/comment" id=`reply-${comment.id}`)
+            input(type="hidden" name="parentId" value=comment.id)
+            input(type="hidden" name="storyId" value=storyId)
+            textarea.reply-textarea(name="text" rows="4" placeholder="Write a reply..." required)
+            .reply-actions
+              button.btn.btn-primary(type="submit") Reply
+              a.btn.btn-cancel.reply-cancel(href="#" data-comment-id=comment.id) Cancel
+      if comment.children && comment.children.length
+        .comment-children
+          each child in comment.children
+            if !child.deleted || (child.children && child.children.length)
+              +commentNode(child, depth + 1, storyId)

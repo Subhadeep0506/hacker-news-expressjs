@@ -1,0 +1,27 @@
+mixin storyRow(item, rank)
+  .story-row
+    .story-rank= rank
+    .story-vote
+      if currentUser
+        form.vote-form(method="POST" action="/vote")
+          input(type="hidden" name="itemId" value=item.id)
+          input(type="hidden" name="direction" value="up")
+          button.vote-btn(type="submit" title="upvote" aria-label="upvote") &#9650;
+      else
+        span.vote-btn.vote-btn-disabled(title="login to vote" aria-label="upvote") &#9650;
+    .story-main
+      .story-title
+        if item.url
+          a.story-link(href=item.url target="_blank" rel="noopener")= item.title
+          |
+          a.story-domain(href=`/story/${item.id}`) (#{extractDomain(item.url)})
+        else
+          a.story-link(href=`/story/${item.id}`)= item.title || '[untitled]'
+      .story-meta
+        span #{item.score || 0} points
+        |  by
+        a.meta-link(href=`/profile/${item.by}`)= item.by
+        |
+        a.meta-link(href=`/story/${item.id}`)= timeAgo(item.time)
+        |  |
+        a.meta-link(href=`/story/${item.id}`) #{pluralize(item.descendants || 0, 'comment')}

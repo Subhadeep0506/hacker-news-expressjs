@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+  .auth-page
+    .auth-card
+      h1.auth-title Log in to Hacker News
+      p.auth-subtitle Use your news.ycombinator.com credentials
+
+      if error
+        .flash.flash-error
+          span= error
+
+      form.auth-form(method="POST" action="/login")
+        input(type="hidden" name="redirect" value=redirect)
+        .form-group
+          label.form-label(for="username") Username
+          input.form-input(type="text" id="username" name="username" required autofocus autocomplete="username" placeholder="your HN username")
+        .form-group
+          label.form-label(for="password") Password
+          input.form-input(type="password" id="password" name="password" required autocomplete="current-password" placeholder="your HN password")
+        button.btn.btn-primary.btn-full(type="submit") Log In
+
+      p.auth-footer
+        | Don't have an account?
+        a(href="https://news.ycombinator.com/login" target="_blank" rel="noopener") Register on HN

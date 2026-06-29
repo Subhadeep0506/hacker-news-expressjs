@@ -1,0 +1,58 @@
+extends ../layout
+
+include ../mixins/pagination
+
+block content
+  .user-page
+    .user-card
+      h1.user-name= user.id
+      .user-stats
+        .user-stat
+          span.stat-value= user.karma
+          span.stat-label karma
+        .user-stat
+          span.stat-value= formatDate(user.created)
+          span.stat-label joined
+      if user.about
+        .user-about!= user.about
+
+    .user-tabs
+      a.tab(href=`/profile/${user.id}?tab=submissions` class=(tab === 'submissions' ? 'tab-active' : '')) Submissions (#{tabData.total})
+      a.tab(href=`/profile/${user.id}?tab=comments` class=(tab === 'comments' ? 'tab-active' : '')) Comments (#{tabData.total})
+
+    .tab-content
+      if tab === 'submissions'
+        if tabData.items && tabData.items.length
+          each item in tabData.items
+            .submission-row
+              .submission-title
+                if item.url
+                  a(href=item.url target="_blank" rel="noopener")= item.title
+                  |
+                  span.story-domain (#{extractDomain(item.url)})
+                else
+                  a(href=`/story/${item.objectID}`)= item.title
+              .submission-meta
+                span #{item.points || 0} points
+                |  &middot;
+                span= timeAgo(item.created_at_i)
+                |  &middot;
+                a.meta-link(href=`/story/${item.objectID}`) #{pluralize(item.num_comments || 0, 'comment')}
+        else
+          .empty-state
+            p No submissions found.
+      else
+        if tabData.items && tabData.items.length
+          each comment in tabData.items
+            .comment-row
+              .comment-row-meta
+                | on
+                a.meta-link(href=`/story/${comment.story_id}`)= comment.story_title || 'a story'
+                |  &middot;
+                span= timeAgo(comment.created_at_i)
+              .comment-row-text!= comment.comment_text
+        else
+          .empty-state
+            p No comments found.
+
+      +pagination(`/profile/${user.id}?tab=${tab}`, page, tabData.totalPages)

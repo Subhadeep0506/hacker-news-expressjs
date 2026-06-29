@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+  .error-page
+    .error-code= status
+    h1.error-message= message
+    p.error-help
+      a(href="/") &larr; Back to home

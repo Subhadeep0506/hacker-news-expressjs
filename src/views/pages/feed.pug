@@ -1,0 +1,16 @@
+extends ../layout
+
+include ../mixins/story-row
+include ../mixins/pagination
+
+block content
+  .feed
+    h1.feed-title= feedTitle
+    .story-list
+      if items && items.length
+        each item, i in items
+          +storyRow(item, startRank + i)
+      else
+        .empty-state
+          p No stories found.
+    +pagination(`/${feedType}`, page, totalPages)

@@ -1,0 +1,12 @@
+mixin pagination(basePath, currentPage, totalPages)
+  if totalPages > 1
+    nav.pagination
+      if currentPage > 0
+        a.page-btn(href=`${basePath}${basePath.includes('?') ? '&' : '?'}page=${currentPage - 1}`) &laquo; Prev
+      else
+        span.page-btn.page-btn-disabled &laquo; Prev
+      span.page-info Page #{currentPage + 1} of #{totalPages}
+      if currentPage < totalPages - 1
+        a.page-btn(href=`${basePath}${basePath.includes('?') ? '&' : '?'}page=${currentPage + 1}`) Next &raquo;
+      else
+        span.page-btn.page-btn-disabled Next &raquo;

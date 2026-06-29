@@ -1,0 +1,26 @@
+extends ../layout
+
+block content
+  .auth-page
+    .auth-card
+      h1.auth-title Submit a Story
+      p.auth-subtitle Share a link or start a discussion
+
+      if error
+        .flash.flash-error
+          span= error
+
+      form.auth-form(method="POST" action="/submit")
+        .form-group
+          label.form-label(for="title") Title
+          input.form-input(type="text" id="title" name="title" required maxlength="80" value=values.title placeholder="Story title (max 80 characters)")
+        .form-group
+          label.form-label(for="url") URL
+          input.form-input(type="url" id="url" name="url" value=values.url placeholder="https://example.com (optional)")
+        .form-group
+          label.form-label(for="text") Text
+          textarea.form-textarea(id="text" name="text" rows="5" maxlength="10000" placeholder="Or write text here for an Ask HN / discussion post (optional)")= values.text
+        .form-help
+          p Submit a URL or text, not both. If you submit a URL, the title should describe what it links to.
+            | Leave the URL blank to submit a question for the HN community.
+        button.btn.btn-primary.btn-full(type="submit") Submit
