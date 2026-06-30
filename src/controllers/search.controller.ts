@@ -4,7 +4,7 @@ import type { SearchResponse } from './types.js';
 
 type SortMode = 'relevance' | 'date';
 
-@Route('search')
+@Route('feed/search')
 @Tags('Search')
 export class SearchController extends Controller {
 

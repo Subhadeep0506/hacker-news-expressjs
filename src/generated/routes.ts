@@ -472,7 +472,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"default":0,"in":"query","name":"page","dataType":"double"},
                 limit: {"default":20,"in":"query","name":"limit","dataType":"double"},
         };
-        app.get('/search',
+        app.get('/feed/search',
             ...(fetchMiddlewares<RequestHandler>(SearchController)),
             ...(fetchMiddlewares<RequestHandler>(SearchController.prototype.search)),
 
