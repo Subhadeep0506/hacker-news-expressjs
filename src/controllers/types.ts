@@ -99,6 +99,10 @@ export interface HealthResponse {
     error?: string;
 }
 
+export interface OgImageResponse {
+    image: string | null;
+}
+
 export interface AlgoliaStoryHit {
     objectID: string;
     title: string;

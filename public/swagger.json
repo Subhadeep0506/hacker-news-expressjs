@@ -336,6 +336,19 @@
 					"date"
 				]
 			},
+			"OgImageResponse": {
+				"properties": {
+					"image": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"image"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ItemResponse": {
 				"properties": {
 					"id": {
@@ -1069,6 +1082,48 @@
 							"default": 20,
 							"format": "double",
 							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/og-image": {
+			"get": {
+				"operationId": "GetOgImage",
+				"responses": {
+					"200": {
+						"description": "OG image URL or null",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OgImageResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid or disallowed URL",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Extract the Open Graph image URL from a web page. Cached for 24 hours.",
+				"tags": [
+					"OG Image"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "url",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]

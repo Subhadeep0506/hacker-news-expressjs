@@ -39,6 +39,7 @@ export const sessionLog = logger.child({ component: 'session' });
 export const hnLog = logger.child({ component: 'hn' });
 export const writeLog = logger.child({ component: 'write' });
 export const rateLimitLog = logger.child({ component: 'ratelimit' });
+export const ogLog = logger.child({ component: 'og' });
 
 export function genReqId() {
     return randomUUID();
